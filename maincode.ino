@@ -11,26 +11,29 @@ unsigned int salve1[] = {
 unsigned int salve2[] = {
   X,L,X,C,X,C,X,C,X,C,X,L,X,C,X,C,X,L,X,C,X,L,X,L,X,L,X,C,X,L,X};
 
-//以上开关机信号，毛子写的，我抄的。
+//以上开关机信号
 
 void setup()
 {
   Serial. begin(9600);
-  pinMode(2, OUTPUT);
-  pinMode(13, OUTPUT); 
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(13, OUTPUT);
 }
 
 
 void loop()
-{   
-  delay(1000);               //工作指示灯闪烁 
+{ 
+  delay(1600);   
   digitalWrite(13, HIGH);   //工作指示灯闪烁 
-  delay(1000);             //工作指示灯闪烁        
+  delay(100);             //工作指示灯闪烁        
   digitalWrite(13, LOW);  //工作指示灯闪烁 
-  int v1 = analogRead(A7); //读取机顶盒usb电压
+  
+  int v1 = analogRead(A6); //读取机顶盒usb电压
   float V1 = v1*(5.0/1023.0); //计算0-5v的电压值
  
-if (V1 > 4.9 && old == 0)  //usb有电压且电视机为关机状态
+ 
+if (V1 > 4.5 && old == 0)  //usb有电压且电视机为关机状态
 
   {   
       irsend.sendRaw(salve1, 31, 38); 
@@ -38,43 +41,53 @@ if (V1 > 4.9 && old == 0)  //usb有电压且电视机为关机状态
       irsend.sendRaw(salve2, 31, 38); 
       delay(30);
       irsend.sendRaw(salve1, 31, 38);
-      digitalWrite(2, HIGH);   //状态指示灯闪烁
-      delay(1000);             //状态指示灯闪烁          
-      digitalWrite(2, LOW);  //状态指示灯闪烁 
-      delay(800);
-      irsend.sendRaw(salve1, 31, 38); 
-      delay(30);
-      irsend.sendRaw(salve2, 31, 38); 
-      delay(30);
-      irsend.sendRaw(salve1, 31, 38);              
-      digitalWrite(2, HIGH);   //状态指示灯闪烁
-      delay(1000);             //状态指示灯闪烁          
-      digitalWrite(2, LOW);  //状态指示灯闪烁
-      old=1;  
-      //打开电视机，标记为开机状态
-   }
-else if (V1 < 4.9 && old == 1)  //机顶盒掉电且电视机为开机状态
- 
-  {
+      
+      digitalWrite(5, HIGH);   //状态指示灯闪烁
+      delay(500);             //状态指示灯闪烁          
+      digitalWrite(5, LOW);  //状态指示灯闪烁 
 
-      delay(3000);    //延时3秒关机
+      delay(1000); 
+      
       irsend.sendRaw(salve1, 31, 38); 
       delay(30);
       irsend.sendRaw(salve2, 31, 38); 
       delay(30);
       irsend.sendRaw(salve1, 31, 38);  
-      digitalWrite(2, HIGH);   //状态指示灯闪烁
-      delay(1000);             //状态指示灯闪烁          
-      digitalWrite(2, LOW);  //状态指示灯闪烁
-      delay(800);
+                  
+      digitalWrite(5, HIGH);   //状态指示灯闪烁
+      delay(500);             //状态指示灯闪烁          
+      digitalWrite(5, LOW);  //状态指示灯闪烁
+      
+      old=1;  
+      //打开电视机，标记为开机状态
+   }
+else if (V1 < 4.5 && old == 1)  //机顶盒掉电且电视机为开机状态
+ 
+  {
+      delay(2000); 
+      
+      irsend.sendRaw(salve1, 31, 38); 
+      delay(30);
+      irsend.sendRaw(salve2, 31, 38); 
+      delay(30);
+      irsend.sendRaw(salve1, 31, 38);  
+      
+      digitalWrite(5, HIGH);   //状态指示灯闪烁
+      delay(500);             //状态指示灯闪烁          
+      digitalWrite(5, LOW);  //状态指示灯闪烁
+
+      delay(1000); 
+   
       irsend.sendRaw(salve1, 31, 38); 
       delay(30);
       irsend.sendRaw(salve2, 31, 38); 
       delay(30);
       irsend.sendRaw(salve1, 31, 38); 
-      digitalWrite(2, HIGH);   //状态指示灯闪烁
-      delay(1000);             //状态指示灯闪烁          
-      digitalWrite(2, LOW);  //状态指示灯闪烁
+      
+      digitalWrite(5, HIGH);   //状态指示灯闪烁
+      delay(500);             //状态指示灯闪烁          
+      digitalWrite(5, LOW);  //状态指示灯闪烁
+      
       old=0;
       //关闭电视机，标记为关机状态
   
